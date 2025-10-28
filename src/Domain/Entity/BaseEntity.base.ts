@@ -8,13 +8,11 @@ export interface ICacheableEntity {
 
 // Interface Base Entity by Id
 export interface IEntity<TId> extends IEntityEmpty, ICacheableEntity {
-    Id: TId | null;
+    id: TId | null;
 }
 
 // Base Class Entity by ID
 export class Entity<TId> implements IEntity<TId> {
-    Id: TId | null;
-
     constructor(
         public id: TId | null 
     ) {}

@@ -1,12 +1,12 @@
 export abstract class DomainEvent {
-    public readonly OccurredOn: Date;
-    public readonly AggregateId: string;
-    public readonly EventType: string;
+    public readonly occurredOn: Date;
+    public readonly aggregateId: string;
+    public readonly eventType: string;
 
     constructor(aggregateId: string) {
-        this.AggregateId = aggregateId;
-        this.OccurredOn = new Date();
-        this.EventType = this.constructor.name;
+        this.aggregateId = aggregateId;
+        this.occurredOn = new Date();
+        this.eventType = this.constructor.name;
     }
 
     abstract getEventData(): Record<string, any>;
