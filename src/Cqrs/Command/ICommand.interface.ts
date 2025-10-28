@@ -1,14 +1,14 @@
 export interface ICommand {
-    readonly commandId: string;
-    readonly timestamp: Date;
+    readonly CommandId: string;
+    readonly Timestamp: Date;
 }
 
 export abstract class Command implements ICommand {
-    public readonly commandId: string; 
-    public readonly timestamp: Date;
+    public readonly CommandId: string; 
+    public readonly Timestamp: Date;
 
     constructor() {
-        this.commandId = crypto.randomUUID();
-        this.timestamp = new Date();
+        this.CommandId = crypto.randomUUID();
+        this.Timestamp = new Date();
     }
 }
