@@ -1,5 +1,7 @@
 import { HttpStatusCodeConstants } from "./HttpStatusCodeConstants.constant";
 
+export const ExceptionText = "Exception";
+
 export enum ErrorConstants {
     // ==========================================
     // 1. VALIDATION ERRORS (1000-1999)
