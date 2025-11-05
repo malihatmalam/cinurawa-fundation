@@ -1,33 +1,34 @@
-import { Injectable } from "@nestjs/common";
-import { IMediator } from "./IMediator.interface";
-import { CommandBus } from "../Command/CommandBus";
-import { QueryBus } from "../Query/QueryBus";
-import { ICommand } from "../Command/ICommand.interface";
-import { IQuery } from "../Query/IQuery.interface";
+import { Injectable } from '@nestjs/common';
+import { ICommand } from '../Command/ICommand.interface';
+import { CommandBus } from '../Command/CommandBus';
+import { IQuery } from '../Query/IQuery.interface';
+import { QueryBus } from '../Query/QueryBus';
+import { IMediator } from './IMediator.interface';
 
 @Injectable()
 export class MediatorService implements IMediator {
-    constructor(
-        private readonly commandBus: CommandBus,
-        private readonly queryBus: QueryBus
-    ){}
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
 
-    async send<TResult>(
-        request: ICommand | IQuery<TResult>
-    ): Promise<TResult> {
-        if(this.isCommand(request)) {
-            return await this.commandBus.execute(request);
-        } else if (this.isQuery(request)) {
-            return await this.queryBus.execute(request);
-        }
-        throw new Error('Invalid request type');
+  async send<TResult>(request: ICommand | IQuery<TResult>): Promise<TResult> {
+    if (this.isCommand(request)) {
+      return this.commandBus.execute(request);
     }
 
-    private isCommand(request: any): request is ICommand {
-        return'commandId' in request;
+    if (this.isQuery(request)) {
+      return this.queryBus.execute(request);
     }
 
-    private isQuery(request: any): request is IQuery {
-        return 'queryId' in request;
-    }
+    throw new Error('Invalid request type');
+  }
+
+  private isCommand(request: unknown): request is ICommand {
+    return typeof request === 'object' && request !== null && 'commandId' in request;
+  }
+
+  private isQuery<TResult>(request: unknown): request is IQuery<TResult> {
+    return typeof request === 'object' && request !== null && 'queryId' in request;
+  }
 }

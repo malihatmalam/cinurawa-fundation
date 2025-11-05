@@ -1,28 +1,35 @@
-import { Entity } from "../Entity/BaseEntity.base";
-import { DomainEvent } from "../Event/DomainEvent.base";
+import { Entity } from '../Entity/BaseEntity.base';
+import { DomainEvent } from '../Event/DomainEvent.base';
 
 export interface IAggregateRoot {
-    readonly domainEvents: ReadonlyArray<DomainEvent>;
-    clearDomainEvents(): void;
+  readonly domainEvents: ReadonlyArray<DomainEvent>;
+  clearDomainEvents(): void;
 }
 
 export abstract class AggregateRoot<TId = string> extends Entity<TId> implements IAggregateRoot {
-    
-    domainEvents: DomainEvent[] = [];
+  private domainEventsInternal: DomainEvent[] = [];
 
-    protected constructor(id?: TId){
-        super(id ?? (undefined as unknown as TId));
-    }
+  protected constructor(id?: TId) {
+    super(id ?? (undefined as unknown as TId));
+  }
 
-    public getDomainEvents(): ReadonlyArray<DomainEvent> {
-        return this.domainEvents;
-    }
+  get domainEvents(): ReadonlyArray<DomainEvent> {
+    return this.domainEventsInternal;
+  }
 
-    public clearDomainEvents(): void {
-        this.domainEvents = [];
-    }
+  protected addDomainEvent(event: DomainEvent): void {
+    this.domainEventsInternal.push(event);
+  }
 
-    protected raiseDomainEvent(event: DomainEvent): void {
-        this.domainEvents.push(event);
-    }
+  protected raiseDomainEvent(event: DomainEvent): void {
+    this.addDomainEvent(event);
+  }
+
+  public getDomainEvents(): ReadonlyArray<DomainEvent> {
+    return this.domainEventsInternal;
+  }
+
+  public clearDomainEvents(): void {
+    this.domainEventsInternal = [];
+  }
 }

@@ -9,7 +9,7 @@ export class InMemoryCacheService implements ICacheService {
   private readonly cache = new Map<string, ICacheEntry>();
   private readonly tagIndex = new Map<string, Set<string>>();
   private readonly defaultTTL = 3600; // 1 hour
-  private cleanupInterval: NodeJS.Timeout;
+  private cleanupInterval: ReturnType<typeof setInterval>;
 
   constructor() {
     // Cleanup expired entries every minute

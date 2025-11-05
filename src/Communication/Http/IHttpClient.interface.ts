@@ -1,9 +1,10 @@
-import { IHttpResponse } from "./IHttpResponse.interface";
+import { AxiosRequestConfig } from 'axios';
+import { IHttpResponse } from './IHttpResponse.interface';
 
 export interface IHttpClient {
-    get<T = any>(url: string, config?: any): Promise<IHttpResponse<T>>;
-    post<T = any>(url: string, data?: any, config?: any): Promise<IHttpResponse<T>>;
-    put<T = any>(url: string, data?: any, config?: any): Promise<IHttpResponse<T>>;
-    patch<T = any>(url: string, data?: any, config?: any): Promise<IHttpResponse<T>>;
-    delete<T = any>(url: string, config?: any): Promise<IHttpResponse<T>>;
+  get<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<IHttpResponse<T>>;
+  post<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<IHttpResponse<T>>;
+  put<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<IHttpResponse<T>>;
+  patch<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<IHttpResponse<T>>;
+  delete<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<IHttpResponse<T>>;
 }

@@ -1,7 +1,7 @@
 export enum CacheStrategy {
-    Redis = 'redis',
-    InMemory = 'in-memory',
-    Hybrid = 'hybrid'
+  Redis = 'redis',
+  InMemory = 'in-memory',
+  Hybrid = 'hybrid',
 }
 
 export const CacheService = 'CACHE_SERVICE';

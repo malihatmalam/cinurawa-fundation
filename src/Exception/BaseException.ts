@@ -3,17 +3,15 @@ export abstract class BaseException extends Error {
   public readonly code: string;
   public readonly context?: Record<string, any>;
 
-  constructor(
-    message: string,
-    code: string,
-    context?: Record<string, any>
-  ) {
+  protected constructor(message: string, code: string, context?: Record<string, any>) {
     super(message);
     this.name = this.constructor.name;
     this.code = code;
     this.context = context;
     this.timestamp = new Date();
-    Error.captureStackTrace(this, this.constructor);
+    if (typeof Error.captureStackTrace === 'function') {
+      Error.captureStackTrace(this, this.constructor);
+    }
   }
 
   toJSON(): Record<string, any> {
