@@ -1,12 +1,12 @@
-import { FilterCriteria } from "./FilterOperationConstants.constant";
+import { FilterCriteria } from './FilterOperationConstants.constant';
 
 export enum BooleanOperation {
-    And = 'and',
-    Or = 'or',
-    Not = 'not' 
+  And = 'and',
+  Or = 'or',
+  Not = 'not',
 }
 
 export interface BooleanExpression {
-    operation: BooleanOperation;
-    conditions: (FilterCriteria | BooleanExpression);
+  operation: BooleanOperation;
+  conditions: Array<FilterCriteria | BooleanExpression>;
 }

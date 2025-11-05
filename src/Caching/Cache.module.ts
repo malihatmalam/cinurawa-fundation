@@ -1,30 +1,18 @@
-import { CacheOptions, CacheService, CacheStrategy } from "@foundation/Shared/Constants/CacheConstants.constant";
-import { DynamicModule, Module, Provider } from "@nestjs/common";
-import { ICacheModuleOptions } from "./ICacheModuleOptions.interface";
-import { RedisCacheService } from "./Providers/RedisCacheService.service";
-import { InMemoryCacheService } from "./Providers/InMemoryCacheService.service";
-import { HybridCacheService } from "./Providers/HybridCacheService.service";
+import { DynamicModule, Global, Module, Provider } from '@nestjs/common';
+import { CacheOptions, CacheService, CacheStrategy } from '@foundation/Shared/Constants/CacheConstants.constant';
+import { ICacheModuleOptions } from './ICacheModuleOptions.interface';
+import { ICacheService } from './ICacheService.interface';
+import { HybridCacheService } from './Providers/HybridCacheService.service';
+import { InMemoryCacheService } from './Providers/InMemoryCacheService.service';
+import { RedisCacheService } from './Providers/RedisCacheService.service';
 
+@Global()
 @Module({})
 export class CacheModule {
   static forRoot(options: ICacheModuleOptions): DynamicModule {
     const cacheServiceProvider: Provider = {
       provide: CacheService,
-      useFactory: () => {
-        switch (options.strategy) {
-          case CacheStrategy.Redis:
-            return new RedisCacheService(options.redis?.url);
-          case CacheStrategy.InMemory:
-            return new InMemoryCacheService();
-          case CacheStrategy.Hybrid:
-            return new HybridCacheService(
-              new InMemoryCacheService(),
-              new RedisCacheService(options.redis?.url),
-            );
-          default:
-            return new InMemoryCacheService();
-        }
-      },
+      useFactory: () => this.createCacheService(options),
     };
 
     const optionsProvider: Provider = {
@@ -34,56 +22,49 @@ export class CacheModule {
 
     return {
       module: CacheModule,
-      providers: [
-        cacheServiceProvider,
-        optionsProvider,
-        {
-          provide: ICacheService,
-          useExisting: CacheService,
-        },
-      ],
-      exports: [CacheService, ICacheService, CacheOptions],
+      providers: [cacheServiceProvider, optionsProvider],
+      exports: [CacheService, CacheOptions],
       global: true,
     };
   }
 
   static forRootAsync(options: {
-    useFactory: (...args: any[]) => Promise<ICacheModuleOptions> | CacheModuleOptions;
+    useFactory: (...args: any[]) => Promise<ICacheModuleOptions> | ICacheModuleOptions;
     inject?: any[];
   }): DynamicModule {
     const cacheServiceProvider: Provider = {
       provide: CacheService,
       useFactory: async (...args: any[]) => {
         const config = await options.useFactory(...args);
-        
-        switch (config.strategy) {
-          case CacheStrategy.Redis:
-            return new RedisCacheService(config.redis?.url);
-          case CacheStrategy.InMemory:
-            return new InMemoryCacheService();
-          case CacheStrategy.Hybrid:
-            return new HybridCacheService (
-              new InMemoryCacheService(),
-              new RedisCacheService(config.redis?.url),
-            );
-          default:
-            return new InMemoryCacheService();
-        }
+        return this.createCacheService(config);
       },
-      inject: options.inject || [],
+      inject: options.inject ?? [],
+    };
+
+    const optionsProvider: Provider = {
+      provide: CacheOptions,
+      useFactory: options.useFactory,
+      inject: options.inject ?? [],
     };
 
     return {
       module: CacheModule,
-      providers: [
-        cacheServiceProvider,
-        {
-          provide: ICacheService,
-          useExisting: CacheService,
-        },
-      ],
-      exports: [CacheService, ICacheService],
+      providers: [cacheServiceProvider, optionsProvider],
+      exports: [CacheService, CacheOptions],
       global: true,
     };
+  }
+
+  private static createCacheService(options: ICacheModuleOptions): ICacheService {
+    switch (options.strategy) {
+      case CacheStrategy.Redis:
+        return new RedisCacheService(options.redis?.url);
+      case CacheStrategy.InMemory:
+        return new InMemoryCacheService();
+      case CacheStrategy.Hybrid:
+        return new HybridCacheService(new InMemoryCacheService(), new RedisCacheService(options.redis?.url));
+      default:
+        return new InMemoryCacheService();
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { LoggerService } from "../LoggerService.service";
+import { LoggerService } from '../LoggerService.service';
 
 export function LogExecution(options?: {
   logArgs?: boolean;
@@ -8,8 +8,8 @@ export function LogExecution(options?: {
   return function (
     target: any,
     propertyKey: string | symbol,
-    descriptor: PropertyDescriptor
-  ) {
+    descriptor: PropertyDescriptor,
+  ): PropertyDescriptor {
     const originalMethod = descriptor.value;
     const className = target.constructor.name;
     const methodName = String(propertyKey);
@@ -37,14 +37,11 @@ export function LogExecution(options?: {
         return result;
       } catch (error) {
         const duration = Date.now() - startTime;
-        
+
         if (options?.logError !== false) {
-          logger.error(
-            `Failed after ${duration}ms: ${error.message}`,
-            error.stack
-          );
+          logger.error(`Failed after ${duration}ms: ${(error as Error).message}`, (error as Error).stack);
         }
-        
+
         throw error;
       }
     };

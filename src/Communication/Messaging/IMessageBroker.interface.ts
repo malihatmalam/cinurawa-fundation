@@ -1,7 +1,7 @@
-import { IMessage } from "./IMessage.interface";
+import { IMessage } from './IMessage.interface';
 
 export interface IMessageBroker {
-    publish(message: any, options: IMessage): Promise<void>;
-    connect(): Promise<void>;
-    disconnect(): Promise<void>;
+  publish(message: unknown, options: IMessage): Promise<void>;
+  connect(): Promise<void>;
+  disconnect(): Promise<void>;
 }

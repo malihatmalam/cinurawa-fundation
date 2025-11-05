@@ -23,7 +23,7 @@ export class RedisCacheService implements ICacheService, OnModuleDestroy {
       url: this.redisUrl,
     }) as RedisClientType;
 
-    this.client.on('error', (err) => {
+    this.client.on('error', (err: any) => {
       this.logger.error('Redis Client Error', err);
     });
 

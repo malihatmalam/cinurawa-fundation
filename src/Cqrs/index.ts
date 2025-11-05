@@ -1,10 +1,14 @@
+export * from './Command/CommandBus';
 export * from './Command/ICommand.interface';
 export * from './Command/ICommandHandler.interface';
-export * from './Command/CommandBus';
-export * from './Query/IQuery.interface'
+
+export * from './Query/IQuery.interface';
 export * from './Query/IQueryHandler.interface';
 export * from './Query/QueryBus';
+
 export * from './Mediator/IMediator.interface';
 export * from './Mediator/Mediator.service';
+
 export * from './Decorators/CommandHandler.decorator';
 export * from './Decorators/QueryHandler.decorator';
+export * from './Cqrs.module';

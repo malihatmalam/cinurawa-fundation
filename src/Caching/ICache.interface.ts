@@ -1,5 +1,5 @@
 export interface ICache {
-    timeToLive: number;
-    isSlidingExpiration?: boolean;
-    tags?: string[];
+  timeToLive: number;
+  isSlidingExpiration?: boolean;
+  tags?: string[];
 }
