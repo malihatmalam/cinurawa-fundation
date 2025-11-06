@@ -1,13 +1,14 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { IHttpClient } from './IHttpClient.interface';
 import { IHttpClientConfig } from './IHttpClientConfig.interface';
 import { IHttpResponse } from './IHttpResponse.interface';
+import { LoggerService } from '@foundation/Logging';
 
 @Injectable()
 export class HttpClientService implements IHttpClient {
   private readonly client: AxiosInstance;
-  private readonly logger = new Logger(HttpClientService.name);
+  private readonly logger = new LoggerService(HttpClientService.name);
   private readonly retries: number;
   private readonly retryDelay: number;
 

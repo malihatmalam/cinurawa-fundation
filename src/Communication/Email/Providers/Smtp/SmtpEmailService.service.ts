@@ -3,9 +3,11 @@ import * as nodemailer from 'nodemailer';
 import { IEmail } from '../../IEmail.interface';
 import { IEmailService } from '../../IEmailService.interface';
 import { ISmtpConfig } from './ISmtpConfig.interface';
+import { LoggerService } from '@foundation/Logging';
 
 @Injectable()
 export class SmtpEmailService implements IEmailService {
+  private readonly logger = new LoggerService(SmtpEmailService.name);
   private readonly transporter: any;
   private readonly defaultFrom: string;
 
@@ -21,6 +23,7 @@ export class SmtpEmailService implements IEmailService {
   }
 
   async send(options: IEmail): Promise<void> {
+    this.logger.log(`Send email using SMTP method`);
     await this.transporter.sendMail({
       from: options.from ?? this.defaultFrom,
       to: Array.isArray(options.to) ? options.to.join(', ') : options.to,
@@ -34,6 +37,7 @@ export class SmtpEmailService implements IEmailService {
   }
 
   async sendBatch(options: IEmail[]): Promise<void> {
+    this.logger.log(`Send emails in batch with the number of emails: ${options.length}`);
     await Promise.all(options.map((opt) => this.send(opt)));
   }
 }

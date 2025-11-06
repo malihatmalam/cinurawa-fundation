@@ -1,12 +1,13 @@
-import { Injectable, Logger, OnModuleDestroy } from "@nestjs/common";
+import { Injectable, OnModuleDestroy } from "@nestjs/common";
 import { ICacheService } from "../ICacheService.interface";
 import { createClient, RedisClientType } from "redis";
 import { ICache } from "../ICache.interface";
 import { ICacheEntry } from "../ICacheEntry.interface";
+import { LoggerService } from "@foundation/Logging";
 
 @Injectable()
 export class RedisCacheService implements ICacheService, OnModuleDestroy {
-  private readonly logger = new Logger(RedisCacheService.name);
+  private readonly logger = new LoggerService(RedisCacheService.name);
   private client: RedisClientType;
   private readonly defaultTTL = 3600; // 1 hour
   private readonly tagPrefix = 'tag:';

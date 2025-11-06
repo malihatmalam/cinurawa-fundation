@@ -3,10 +3,12 @@ import * as sgMail from '@sendgrid/mail';
 import { IEmail } from '../../IEmail.interface';
 import { IEmailService } from '../../IEmailService.interface';
 import { ISendGridConfig } from './ISendGridConfig.interface';
+import { LoggerService } from '@foundation/Logging';
 
 @Injectable()
 export class SendGridEmailService implements IEmailService {
   private readonly defaultFrom: string;
+  private readonly logger = new LoggerService(SendGridEmailService.name);
 
   constructor(private readonly config: ISendGridConfig) {
     sgMail.setApiKey(config.apiKey);
@@ -14,6 +16,7 @@ export class SendGridEmailService implements IEmailService {
   }
 
   async send(options: IEmail): Promise<void> {
+    this.logger.log(`send email using Send Grid Email method`);
     const message = {
       from: options.from ?? this.defaultFrom,
       to: options.to,
@@ -34,6 +37,7 @@ export class SendGridEmailService implements IEmailService {
   }
 
   async sendBatch(options: IEmail[]): Promise<void> {
+    this.logger.log(`Send emails in batch with the number of emails: ${options.length}`);
     await Promise.all(options.map((opt) => this.send(opt)));
   }
 }

@@ -3,10 +3,12 @@ import { ILogContext, ILogger } from './ILogger.interface';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class LoggerService implements ILogger {
+  private serviceName: string;
   private context?: string;
   private readonly logger: NestLogger;
 
-  constructor(context?: string) {
+  constructor(serviceName: string, context?: string) {
+    this.serviceName = serviceName;
     this.context = context;
     this.logger = new NestLogger();
   }
@@ -28,7 +30,7 @@ export class LoggerService implements ILogger {
     }
 
     const contextStr = entries.map(([key, value]) => `${key}=${value}`).join(' ');
-    return `${message} | ${contextStr}`;
+    return `LOG - [${this.serviceName}] ${message} | ${contextStr}`;
   }
 
   log(message: string, context?: ILogContext): void {

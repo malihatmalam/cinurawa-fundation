@@ -1,14 +1,16 @@
-import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
+import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
 import { IMessage } from '../../IMessage.interface';
 import { IMessageBroker } from '../../IMessageBroker.interface';
 import { IRabbitMqConfig } from './IRabbitMqConfig.interface';
+import { LoggerService } from '@foundation/Logging';
 
 @Injectable()
 export class RabbitMqService implements IMessageBroker, OnModuleDestroy {
   private client: ClientProxy;
-  private readonly logger = new Logger(RabbitMqService.name);
+  
+  private readonly logger = new LoggerService(RabbitMqService.name);
   private isConnected = false;
 
   constructor(private readonly config: IRabbitMqConfig) {

@@ -2,10 +2,11 @@ import { Injectable, Logger } from "@nestjs/common";
 import { ICacheService } from "../ICacheService.interface";
 import { ICacheEntry } from "../ICacheEntry.interface";
 import { ICache } from "../ICache.interface";
+import { LoggerService } from "@foundation/Logging";
 
 @Injectable()
 export class InMemoryCacheService implements ICacheService {
-  private readonly logger = new Logger(InMemoryCacheService.name);
+  private readonly logger = new LoggerService(InMemoryCacheService.name);
   private readonly cache = new Map<string, ICacheEntry>();
   private readonly tagIndex = new Map<string, Set<string>>();
   private readonly defaultTTL = 3600; // 1 hour
