@@ -1,13 +1,13 @@
 import 'reflect-metadata';
 
-const VALUE_OBJECT_METADATA = '__valueObject__';
+const ValueObjectMetadata = '__valueObject__';
 
 export function ValueObjectDecorator(): ClassDecorator {
   return function (target: Function) {
-    (Reflect as any).defineMetadata(VALUE_OBJECT_METADATA, true, target);
+    (Reflect as any).defineMetadata(ValueObjectMetadata, true, target);
   };
 }
 
 export function isValueObject(target: any): boolean {
-  return (Reflect as any).getMetadata(VALUE_OBJECT_METADATA, target.constructor) === true;
+  return (Reflect as any).getMetadata(ValueObjectMetadata, target.constructor) === true;
 }
